@@ -2271,9 +2271,9 @@ namespace ts {
             diagnosticsModified = false;
             nonFileDiagnostics = sortAndDeduplicateDiagnostics(nonFileDiagnostics);
 
-            for (const key in fileDiagnostics) {
-                fileDiagnostics.set(key, sortAndDeduplicateDiagnostics(fileDiagnostics.get(key)));
-            }
+            fileDiagnostics.forEach((diagnostics, key) => {
+                fileDiagnostics.set(key, sortAndDeduplicateDiagnostics(diagnostics));
+            });
         }
     }
 

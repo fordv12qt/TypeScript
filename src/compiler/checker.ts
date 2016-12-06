@@ -3081,7 +3081,7 @@ namespace ts {
                 names.set(getTextOfPropertyName(name), true);
             }
             for (const prop of getPropertiesOfType(source)) {
-                const inNamesToRemove = prop.name in names;
+                const inNamesToRemove = names.has(prop.name);
                 const isPrivate = getDeclarationModifierFlagsFromSymbol(prop) & (ModifierFlags.Private | ModifierFlags.Protected);
                 const isMethod = prop.flags & SymbolFlags.Method;
                 const isSetOnlyAccessor = prop.flags & SymbolFlags.SetAccessor && !(prop.flags & SymbolFlags.GetAccessor);
@@ -6181,10 +6181,10 @@ namespace ts {
             }
             for (const leftProp of getPropertiesOfType(left)) {
                 if (leftProp.flags & SymbolFlags.SetAccessor && !(leftProp.flags & SymbolFlags.GetAccessor)
-                    || leftProp.name in skippedPrivateMembers) {
+                    || skippedPrivateMembers.has(leftProp.name)) {
                     continue;
                 }
-                if (leftProp.name in members) {
+                if (members.has(leftProp.name)) {
                     const rightProp = members.get(leftProp.name);
                     const rightType = getTypeOfSymbol(rightProp);
                     if (maybeTypeOfKind(rightType, TypeFlags.Undefined) || rightProp.flags & SymbolFlags.Optional) {

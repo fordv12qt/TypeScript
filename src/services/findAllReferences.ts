@@ -715,8 +715,9 @@ namespace ts.FindAllReferences {
                 }
 
                 const key = getSymbolId(symbol) + "," + getSymbolId(parent);
-                if (key in cachedResults) {
-                    return cachedResults.get(key);
+                const cached = cachedResults.get(key);
+                if (cached !== undefined) {
+                    return cached;
                 }
 
                 // Set the key so that we don't infinitely recurse
@@ -1078,7 +1079,7 @@ namespace ts.FindAllReferences {
             // the function will add any found symbol of the property-name, then its sub-routine will call
             // getPropertySymbolsFromBaseTypes again to walk up any base types to prevent revisiting already
             // visited symbol, interface "C", the sub-routine will pass the current symbol as previousIterationSymbol.
-            if (symbol.name in previousIterationSymbolsCache) {
+            if (previousIterationSymbolsCache.has(symbol.name)) {
                 return;
             }
 

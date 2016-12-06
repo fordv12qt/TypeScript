@@ -48,7 +48,9 @@ namespace ts {
         class ShimMap<T> implements Map<T> {
             private data = createDictionaryModeObject<T>();
 
-            constructor() {}
+            constructor() {
+                Debug.assert(false); //todo
+            }
 
             delete(key: MapKey): boolean {
                 const had = this.has(key);
@@ -56,6 +58,10 @@ namespace ts {
                     delete this.data[key];
                 }
                 return had;
+            }
+
+            clear(): void {
+                this.data = createDictionaryModeObject<T>();
             }
 
             get(key: MapKey): T {
@@ -129,17 +135,13 @@ namespace ts {
         };
 
         function forEachValueInMap(f: (key: Path, value: T) => void) {
-            for (const key in files) {
-                f(<Path>key, files.get(key));
-            }
+            files.forEach((file, key) => {
+                f(<Path>key, file);
+            });
         }
 
         function getKeys() {
-            const keys: Path[] = [];
-            for (const key in files) {
-                keys.push(<Path>key);
-            }
-            return keys;
+            return getMapKeys(files) as Path[];
         }
 
         // path should already be well-formed so it does not need to be normalized
@@ -1023,6 +1025,7 @@ namespace ts {
         return result;
     }
 
+    //rename to mapIsEmpty
     export function isEmpty<T>(map: Map<T>) {
         return !someInMap(map, () => true);
     }

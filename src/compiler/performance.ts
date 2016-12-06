@@ -74,9 +74,9 @@ namespace ts.performance {
      * @param cb The action to perform for each measure
      */
     export function forEachMeasure(cb: (measureName: string, duration: number) => void) {
-        for (const key in measures) {
-            cb(key, measures.get(key));
-        }
+        measures.forEach((measure, key) => {
+            cb(key, measure);
+        });
     }
 
     /** Enables (and resets) performance measurements for the compiler. */

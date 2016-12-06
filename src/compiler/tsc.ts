@@ -673,13 +673,9 @@ namespace ts {
 
             if (option.name === "lib") {
                 description = getDiagnosticText(option.description);
-                const options: string[] = [];
                 const element = (<CommandLineOptionOfListType>option).element;
                 const typeMap = <Map<number | string>>element.type;
-                for (const key in typeMap) {
-                    options.push(`'${key}'`);
-                }
-                optionsDescriptionMap.set(description, options);
+                optionsDescriptionMap.set(description, getMapKeys(typeMap).map(key => `'${key}'`));
             }
             else {
                 description = getDiagnosticText(option.description);

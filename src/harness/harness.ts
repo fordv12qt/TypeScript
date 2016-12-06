@@ -1103,10 +1103,10 @@ namespace Harness {
                 optionsIndex = ts.createMap<ts.CommandLineOption>();
                 const optionDeclarations = harnessOptionDeclarations.concat(ts.optionDeclarations);
                 for (const option of optionDeclarations) {
-                    optionsIndex[option.name.toLowerCase()] = option;
+                    optionsIndex.set(option.name.toLowerCase(), option);
                 }
             }
-            return optionsIndex[name.toLowerCase()];
+            return optionsIndex.get(name.toLowerCase());
         }
 
         export function setCompilerOptionsFromHarnessSetting(settings: Harness.TestCaseParser.CompilerSettings, options: ts.CompilerOptions & HarnessOptions): void {

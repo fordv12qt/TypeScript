@@ -64,10 +64,10 @@ namespace ts.Completions {
             const entries: CompletionEntry[] = [];
 
             const nameTable = getNameTable(sourceFile);
-            for (const name in nameTable) {
+            nameTable.forEach((namePosition, name) => {
                 // Skip identifiers produced only from the current location
-                if (nameTable.get(name) === position) {
-                    continue;
+                if (namePosition === position) {
+                    return;
                 }
 
                 if (!uniqueNames.get(name)) {
@@ -83,7 +83,7 @@ namespace ts.Completions {
                         entries.push(entry);
                     }
                 }
-            }
+            });
 
             return entries;
         }
@@ -378,9 +378,9 @@ namespace ts.Completions {
                         }
                     }
 
-                    for (const foundFile in foundFiles) {
+                    forEachKeyInMap(foundFiles, foundFile => {
                         result.push(createCompletionEntryForModule(foundFile, ScriptElementKind.scriptElement, span));
-                    }
+                    });
                 }
 
                 // If possible, get folder completion as well

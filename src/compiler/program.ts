@@ -110,7 +110,7 @@ namespace ts {
         }
 
         function directoryExists(directoryPath: string): boolean {
-            if (directoryPath in existingDirectories) {
+            if (existingDirectories.has(directoryPath)) {
                 return true;
             }
             if (sys.directoryExists(directoryPath)) {
@@ -138,11 +138,11 @@ namespace ts {
             const hash = sys.createHash(data);
             const mtimeBefore = sys.getModifiedTime(fileName);
 
-            if (mtimeBefore && fileName in outputFingerprints) {
+            if (mtimeBefore) {
                 const fingerprint = outputFingerprints.get(fileName);
-
                 // If output has not been changed, and the file has no external modification
-                if (fingerprint.byteOrderMark === writeByteOrderMark &&
+                if (fingerprint &&
+                    fingerprint.byteOrderMark === writeByteOrderMark &&
                     fingerprint.hash === hash &&
                     fingerprint.mtime.getTime() === mtimeBefore.getTime()) {
                     return;

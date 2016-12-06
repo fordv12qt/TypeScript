@@ -322,11 +322,11 @@ namespace FourSlash {
             }
             else {
                 // resolveReference file-option is not specified then do not resolve any files and include all inputFiles
-                for (const fileName in this.inputFiles) {
+                this.inputFiles.forEach((file, fileName) => {
                     if (!Harness.isDefaultLibraryFile(fileName)) {
-                        this.languageServiceAdapterHost.addScript(fileName, this.inputFiles[fileName], /*isRootFile*/ true);
+                        this.languageServiceAdapterHost.addScript(fileName, file, /*isRootFile*/ true);
                     }
-                }
+                });
                 this.languageServiceAdapterHost.addScript(Harness.Compiler.defaultLibFileName,
                     Harness.Compiler.getDefaultLibrarySourceFile().text, /*isRootFile*/ false);
             }
@@ -676,11 +676,12 @@ namespace FourSlash {
             const completions = this.getCompletionListAtCaret();
             const uniqueItems = ts.createMap<string>();
             for (const item of completions.entries) {
-                if (!(item.name in uniqueItems)) {
-                    uniqueItems[item.name] = item.kind;
+                const uniqueItem = uniqueItems.get(item.name);
+                if (!uniqueItem) {
+                    uniqueItems.set(item.name, item.kind);
                 }
                 else {
-                    assert.equal(item.kind, uniqueItems[item.name], `Items should have the same kind, got ${item.kind} and ${uniqueItems[item.name]}`);
+                    assert.equal(item.kind, uniqueItem, `Items should have the same kind, got ${item.kind} and ${uniqueItem}`);
                 }
             }
         }

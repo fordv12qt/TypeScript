@@ -2529,7 +2529,7 @@ namespace ts {
                     currentScopeFirstDeclarationsOfName = createMap<Node>();
                 }
 
-                if (!(name in currentScopeFirstDeclarationsOfName)) {
+                if (!currentScopeFirstDeclarationsOfName.has(name)) {
                     currentScopeFirstDeclarationsOfName.set(name, node);
                 }
             }

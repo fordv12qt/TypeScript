@@ -1,5 +1,9 @@
 namespace ts {
-
+    /**
+     * Type of objects whose values are all of the same type.
+     * The `in` and `for-in` operators can *not* be safely used,
+     * since `Object.prototype` may be modified by outside code.
+     */
     export interface MapLike<T> {
         [index: string]: T;
     }
@@ -7,18 +11,16 @@ namespace ts {
     //???
     export type MapKey = string | number; //| number
 
-    export interface Map<T> {//extends MapLike<T> {
-        //__mapBrand: any;
-
-        //leaving out clear() because I can!
-
+    //document
+    export interface Map<T> {
         //forEach always gives strings!
         forEach(action: (value: T, key: string) => void): void;
         get(key: MapKey): T;
         has(key: MapKey): boolean;
         set(key: MapKey, value: T): this;
-        //This is in fact used...
+        //This is in fact used... lots!
         delete(key: MapKey): boolean;
+        clear(): void; //used in tests
     }
 
     // branded string type used to store absolute, normalized and canonicalized paths

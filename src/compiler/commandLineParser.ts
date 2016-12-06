@@ -606,13 +606,13 @@ namespace ts {
                     s = s.slice(s.charCodeAt(1) === CharacterCodes.minus ? 2 : 1).toLowerCase();
 
                     // Try to translate short option names to their full equivalents.
-                    if (s in shortOptionNames) {
-                        s = shortOptionNames.get(s);
+                    const short = shortOptionNames.get(s);
+                    if (short !== undefined) {
+                        s = short;
                     }
 
-                    if (s in optionNameMap) {
-                        const opt = optionNameMap.get(s);
-
+                    const opt = optionNameMap.get(s);
+                    if (opt) {
                         if (opt.isTSConfigOnly) {
                             errors.push(createCompilerDiagnostic(Diagnostics.Option_0_can_only_be_specified_in_tsconfig_json_file, opt.name));
                         }
@@ -1056,8 +1056,8 @@ namespace ts {
         const optionNameMap = arrayToMap(optionDeclarations, opt => opt.name);
 
         for (const id in jsonOptions) {
-            if (id in optionNameMap) {
-                const opt = optionNameMap.get(id);
+            const opt = optionNameMap.get(id);
+            if (opt) {
                 defaultOptions[opt.name] = convertJsonOption(opt, jsonOptions[id], basePath, errors);
             }
             else {
@@ -1257,7 +1257,7 @@ namespace ts {
                 removeWildcardFilesWithLowerPriorityExtension(file, wildcardFileMap, supportedExtensions, keyMapper);
 
                 const key = keyMapper(file);
-                if (!(key in literalFileMap) && !(key in wildcardFileMap)) {
+                if (!literalFileMap.has(key) && !wildcardFileMap.has(key)) {
                     wildcardFileMap.set(key, file);
                 }
             }
@@ -1333,13 +1333,13 @@ namespace ts {
             }
 
             // Remove any subpaths under an existing recursively watched directory.
-            for (const key in wildcardDirectories) {
+            forEachKeyInMap(wildcardDirectories, key => {
                 for (const recursiveKey of recursiveKeys) {
                     if (key !== recursiveKey && containsPath(recursiveKey, key, path, !useCaseSensitiveFileNames)) {
                         wildcardDirectories.delete(key);
                     }
                 }
-            }
+            });
         }
 
         return wildcardDirectories;
@@ -1373,7 +1373,7 @@ namespace ts {
         for (let i = ExtensionPriority.Highest; i < adjustedExtensionPriority; i++) {
             const higherPriorityExtension = extensions[i];
             const higherPriorityPath = keyMapper(changeExtension(file, higherPriorityExtension));
-            if (higherPriorityPath in literalFiles || higherPriorityPath in wildcardFiles) {
+            if (literalFiles.has(higherPriorityPath) || wildcardFiles.has(higherPriorityPath)) {
                 return true;
             }
         }

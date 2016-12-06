@@ -8,25 +8,28 @@ namespace ts {
 
     function createDefaultServerHost(fileMap: Map<File>): server.ServerHost {
         const existingDirectories = createMap<boolean>();
-        for (const name in fileMap) {
+        forEachKeyInMap(fileMap, name => {
             let dir = getDirectoryPath(name);
             let previous: string;
             do {
-                existingDirectories[dir] = true;
+                existingDirectories.set(dir, true);
                 previous = dir;
                 dir = getDirectoryPath(dir);
             } while (dir !== previous);
-        }
+        });
         return {
             args: <string[]>[],
             newLine: "\r\n",
             useCaseSensitiveFileNames: false,
             write: noop,
-            readFile: path => path in fileMap ? fileMap[path].content : undefined,
+            readFile: path => {
+                const file = fileMap.get(path);
+                return file && file.content;
+            },
             writeFile: notImplemented,
             resolvePath: notImplemented,
-            fileExists: path => path in fileMap,
-            directoryExists: path => existingDirectories[path] || false,
+            fileExists: path => fileMap.has(path),
+            directoryExists: path => existingDirectories.get(path) || false,
             createDirectory: noop,
             getExecutingFilePath: () => "",
             getCurrentDirectory: () => "",

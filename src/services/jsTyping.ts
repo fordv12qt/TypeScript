@@ -107,8 +107,8 @@ namespace ts.JsTyping {
         // add typings for unresolved imports
         if (unresolvedImports) {
             for (const moduleId of unresolvedImports) {
-                const typingName = moduleId in nodeCoreModules ? "node" : moduleId;
-                if (!(typingName in inferredTypings)) {
+                const typingName = nodeCoreModules.has(moduleId) ? "node" : moduleId;
+                if (!inferredTypings.has(typingName)) {
                     inferredTypings.set(typingName, undefined);
                 }
             }
@@ -146,7 +146,7 @@ namespace ts.JsTyping {
             }
 
             for (const typing of typingNames) {
-                if (!(typing in inferredTypings)) {
+                if (!inferredTypings.has(typing)) {
                     inferredTypings.set(typing, undefined);
                 }
             }
@@ -189,7 +189,7 @@ namespace ts.JsTyping {
             const cleanedTypingNames = map(inferredTypingNames, f => f.replace(/((?:\.|-)min(?=\.|$))|((?:-|\.)\d+)/g, ""));
 
             if (safeList !== EmptySafeList) {
-                mergeTypings(filter(cleanedTypingNames, f => f in safeList));
+                mergeTypings(filter(cleanedTypingNames, f => safeList.has(f)));
             }
 
             const hasJsxFile = forEach(fileNames, f => ensureScriptKind(f, getScriptKindFromFileName(f)) === ScriptKind.JSX);

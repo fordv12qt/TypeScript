@@ -143,9 +143,10 @@ namespace ts {
             getNewLine(): string {
                 return sys ? sys.newLine : newLine;
             },
-            fileExists: fileName => fileName in files,
+            fileExists: fileName => files.has(fileName),
             readFile: fileName => {
-                return fileName in files ? files[fileName].text : undefined;
+                const file = files.get(fileName);
+                return file && file.text;
             },
         };
     }

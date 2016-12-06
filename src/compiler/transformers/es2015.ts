@@ -2562,8 +2562,7 @@ namespace ts {
             if (!table) {
                 return;
             }
-            for (const labelText in table) {
-                const labelMarker = table.get(labelText);
+            table.forEach((labelMarker, labelText) => {
                 const statements: Statement[] = [];
                 // if there are no outer converted loop or outer label in question is located inside outer converted loop
                 // then emit labeled break\continue
@@ -2577,7 +2576,7 @@ namespace ts {
                     statements.push(createReturn(loopResultName));
                 }
                 caseClauses.push(createCaseClause(createLiteral(labelMarker), statements));
-            }
+            });
         }
 
         function processLoopVariableDeclaration(decl: VariableDeclaration | BindingElement, loopParameters: ParameterDeclaration[], loopOutParameters: LoopOutParameter[]) {

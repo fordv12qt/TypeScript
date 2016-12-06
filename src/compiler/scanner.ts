@@ -275,9 +275,9 @@ namespace ts {
 
     function makeReverseMap(source: Map<number>): string[] {
         const result: string[] = [];
-        for (const name in source) {
-            result[source.get(name)] = name;
-        }
+        source.forEach((value, name) => {
+            result[value] = name;
+        });
         return result;
     }
 

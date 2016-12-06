@@ -74,9 +74,9 @@ namespace ts.codefix {
 
         getAllActions() {
             let result: ImportCodeAction[] = [];
-            for (const symbolId in this.symbolIdToActionMap) {
-                result = concatenate(result, this.symbolIdToActionMap.get(symbolId));
-            }
+            this.symbolIdToActionMap.forEach(actions => {
+                result = concatenate(result, actions);
+            });
             return result;
         }
 
