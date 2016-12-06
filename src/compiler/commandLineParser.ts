@@ -1264,7 +1264,7 @@ namespace ts {
         }
 
         const literalFiles = getMapValues(literalFileMap);//reduceProperties(literalFileMap, addFileToOutput, []);
-        const wildcardFiles = getMapValues(literalFileMap);//reduceProperties(wildcardFileMap, addFileToOutput, []);
+        const wildcardFiles = getMapValues(wildcardFileMap);//reduceProperties(wildcardFileMap, addFileToOutput, []);
         wildcardFiles.sort(host.useCaseSensitiveFileNames ? compareStrings : compareStringsCaseInsensitive);
         return {
             fileNames: literalFiles.concat(wildcardFiles),

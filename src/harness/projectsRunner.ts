@@ -452,6 +452,7 @@ class ProjectRunner extends RunnerBase {
 
                     function getCompilerResolutionInfo() {
                         const resolutionInfo: ProjectRunnerTestCaseResolutionInfo & ts.CompilerOptions = JSON.parse(JSON.stringify(testCase));
+                        //TODO: if there are errors, `program` will be undefined... it's annoying to get a crash in addition to an error...
                         resolutionInfo.resolvedInputFiles = ts.map(compilerResult.program.getSourceFiles(), inputFile => {
                             return ts.convertToRelativePath(inputFile.fileName, getCurrentDirectory(), path => Harness.Compiler.getCanonicalFileName(path));
                         });

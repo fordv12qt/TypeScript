@@ -174,6 +174,7 @@ namespace ts {
         }
 
         function clear() {
+            //TODO: files.clear()
             files = createMap<T>();
         }
 
@@ -826,6 +827,7 @@ namespace ts {
         return initial;
     }
 
+    //*only* use this for `hasProperty`
     const hasOwnProperty = Object.prototype.hasOwnProperty;
 
     /**
@@ -924,7 +926,7 @@ namespace ts {
     //    }
     //    return false;
     //}
-    export function someInMap<T>(map: Map<T>, predicate?: (value: T, key: string) => boolean): boolean {
+    export function someInMap<T>(map: Map<T>, predicate: (value: T, key: string) => boolean): boolean {
         let result = false;
         map.forEach((value, key) => {
             result = result || predicate(value, key);
@@ -1057,6 +1059,7 @@ namespace ts {
     }
 
     //rename to mapIsEmpty
+    //move near someInMap
     export function isEmpty<T>(map: Map<T>) {
         return !someInMap(map, () => true);
     }

@@ -21,7 +21,7 @@ namespace ts.NavigateTo {
                     let matches = patternMatcher.getMatchesForLastSegmentOfPattern(name);
 
                     if (!matches) {
-                        return false; // continue to next named declarations
+                        return; // continue to next named declarations
                     }
 
                     for (const declaration of declarations) {
@@ -36,7 +36,7 @@ namespace ts.NavigateTo {
                             matches = patternMatcher.getMatches(containers, name);
 
                             if (!matches) {
-                                return false; // continue to next named declarations
+                                return; // continue to next named declarations
                             }
                         }
 

@@ -142,7 +142,7 @@ namespace ts.server {
 
     export function createNormalizedPathMap<T>(): NormalizedPathMap<T> {
 /* tslint:disable:no-null-keyword */
-        const map: Map<T> = Object.create(null);
+        const map = createMap<T>();
 /* tslint:enable:no-null-keyword */
         return {
             get(path) {

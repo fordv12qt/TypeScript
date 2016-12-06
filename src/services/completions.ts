@@ -1566,7 +1566,7 @@ namespace ts.Completions {
                 existingImportsOrExports.set(name.text, true);
             }
 
-            if (!someInMap(existingImportsOrExports)) {
+            if (isEmpty(existingImportsOrExports)) {
                 return filter(exportsOfModule, e => e.name !== "default");
             }
 
