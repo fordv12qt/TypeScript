@@ -932,7 +932,7 @@ namespace ts {
         return result;
     }
     //kill?
-    function someKeyInMap(map: Map<any>, predicate?: (key: string) => boolean): boolean {
+    export function someKeyInMap(map: Map<any>, predicate?: (key: string) => boolean): boolean {
         return someInMap(map, (_, key) => predicate(key));
     }
 
@@ -1216,10 +1216,10 @@ namespace ts {
         return text.replace(/{(\d+)}/g, (_match, index?) => args[+index + baseIndex]);
     }
 
-    export let localizedDiagnosticMessages: Map<string> = undefined;
+    export let localizedDiagnosticMessages: MapLike<string> = undefined;
 
     export function getLocaleSpecificMessage(message: DiagnosticMessage) {
-        return localizedDiagnosticMessages && localizedDiagnosticMessages.get(message.key) || message.message;
+        return localizedDiagnosticMessages && localizedDiagnosticMessages[message.key] || message.message;
     }
 
     export function createFileDiagnostic(file: SourceFile, start: number, length: number, message: DiagnosticMessage, ...args: (string | number)[]): Diagnostic;

@@ -2543,7 +2543,7 @@ namespace ts {
             if (currentScopeFirstDeclarationsOfName) {
                 const name = node.symbol && node.symbol.name;
                 if (name) {
-                    return currentScopeFirstDeclarationsOfName.set(name, node);
+                    return currentScopeFirstDeclarationsOfName.get(name) === node;
                 }
             }
 

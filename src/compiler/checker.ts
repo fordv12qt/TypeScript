@@ -18989,7 +18989,7 @@ namespace ts {
         }
 
         function hasExportedMembers(moduleSymbol: Symbol) {
-            return forEachKeyInMap(moduleSymbol.exports, id => id !== "export=");
+            return someKeyInMap(moduleSymbol.exports, id => id !== "export=");
         }
 
         function checkExternalModuleExports(node: SourceFile | ModuleDeclaration) {
