@@ -266,7 +266,7 @@ namespace Harness.LanguageService {
                     for (const module of preprocessInfo.importedFiles) {
                         const resolutionInfo = ts.resolveModuleName(module.fileName, fileName, compilerOptions, moduleResolutionHost);
                         if (resolutionInfo.resolvedModule) {
-                            imports[module.fileName] = resolutionInfo.resolvedModule.resolvedFileName;
+                            imports.set(module.fileName, resolutionInfo.resolvedModule.resolvedFileName);
                         }
                     }
                     return JSON.stringify(imports);
@@ -280,7 +280,7 @@ namespace Harness.LanguageService {
                         for (const typeReferenceDirective of preprocessInfo.typeReferenceDirectives) {
                             const resolutionInfo = ts.resolveTypeReferenceDirective(typeReferenceDirective.fileName, fileName, settings, moduleResolutionHost);
                             if (resolutionInfo.resolvedTypeReferenceDirective.resolvedFileName) {
-                                resolutions[typeReferenceDirective.fileName] = resolutionInfo.resolvedTypeReferenceDirective;
+                                resolutions.set(typeReferenceDirective.fileName, resolutionInfo.resolvedTypeReferenceDirective);
                             }
                         }
                         return JSON.stringify(resolutions);

@@ -122,7 +122,7 @@ namespace ts {
             trace: s => trace.push(s),
             getTrace: () => trace,
             getSourceFile(fileName): SourceFile {
-                return files[fileName];
+                return files.get(fileName);
             },
             getDefaultLibFileName(): string {
                 return "lib.d.ts";
@@ -189,7 +189,7 @@ namespace ts {
         }
         else {
             assert.isTrue(cache !== undefined, `expected ${caption} to be set`);
-            assert.isTrue(equalOwnProperties(expectedContent, cache, entryChecker), `contents of ${caption} did not match the expected contents.`);
+            assert.isTrue(mapsAreEqual(expectedContent, cache, entryChecker), `contents of ${caption} did not match the expected contents.`);
         }
     }
 

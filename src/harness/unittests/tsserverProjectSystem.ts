@@ -437,7 +437,7 @@ namespace ts.projectSystem {
 
         triggerDirectoryWatcherCallback(directoryName: string, fileName: string): void {
             const path = this.toPath(directoryName);
-            const callbacks = this.watchedDirectories[path];
+            const callbacks = this.watchedDirectories.get(path);
             if (callbacks) {
                 for (const callback of callbacks) {
                     callback.cb(fileName);
@@ -447,7 +447,7 @@ namespace ts.projectSystem {
 
         triggerFileWatcherCallback(fileName: string, removed?: boolean): void {
             const path = this.toPath(fileName);
-            const callbacks = this.watchedFiles[path];
+            const callbacks = this.watchedFiles.get(path);
             if (callbacks) {
                 for (const callback of callbacks) {
                     callback(path, removed);

@@ -39,18 +39,29 @@ namespace ts {
 
         return map;
     }
+    export function createMapFromPairs<T>(...pairs: [number, T][]): Map<T> {
+        const map: Map<T> = createMapWorker<T>();
+
+        for (const [key, value] of pairs) {
+            map.set(key, value);
+        }
+
+        return map;
+    }
 
     // The global Map object. This may not be available, so we must test for it.
-    declare const Map: { new<T>(): Map<T> } | undefined;
-    const createMapWorker: <T>() => Map<T> = typeof Map !== "undefined" ? (() => new Map<any>()) : shimCreateMap();
+   //declare const Map: { new<T>(): Map<T> } | undefined;
+    //function createMapWorker<T>(): Map<T> {
+    //    return new Map<T>();
+    //}
+    const createMapWorker = shimCreateMap(); //This is slightly different since it stringifies everything.
+    //const createMapWorker: <T>() => Map<T> = typeof Map !== "undefined" ? (() => new Map<any>()) : shimCreateMap();
     function shimCreateMap(): <T>() => Map<T> {
         // Leave the class inside the function so it doesn't get compiled if not necessary.
         class ShimMap<T> implements Map<T> {
             private data = createDictionaryModeObject<T>();
 
-            constructor() {
-                Debug.assert(false); //todo
-            }
+            constructor() {}
 
             delete(key: MapKey): boolean {
                 const had = this.has(key);
@@ -94,6 +105,7 @@ namespace ts {
     }
 
     //Kill somehow?
+    //reduce usages at least
     export function setAndReturn<T>(map: Map<T>, key: MapKey, value: T): T {
         map.set(key, value);
         return value;
@@ -889,11 +901,12 @@ namespace ts {
     //    return result;
     //}
     //Use this a lot
-    export function forEachInMap<T, U>(map: Map<T>, action: (value: T, key: string) => U | undefined): U | undefined {
+    //TODO:perf...
+    export function forEachInMap<T, U>(map: Map<T>, callback: (value: T, key: string) => U | undefined): U | undefined {
         let result: U | undefined;
         map.forEach((value, key) => {
             if (result === undefined) {
-                result = action(value, key);
+                result = callback(value, key);
             }
         });
         return result;
@@ -917,6 +930,10 @@ namespace ts {
             result = result || predicate(value, key);
         });
         return result;
+    }
+    //kill?
+    function someKeyInMap(map: Map<any>, predicate?: (key: string) => boolean): boolean {
+        return someInMap(map, (_, key) => predicate(key));
     }
 
     /**
@@ -1003,6 +1020,20 @@ namespace ts {
             if (!hasOwnProperty.call(left, key)) return false;
         }
         return true;
+    }
+    //wasn't there another one of these???
+    /** True if the maps have the same keys and values. */
+    export function mapsAreEqual<T>(left: Map<T>, right: Map<T>, valuesAreEqual?: (left: T, right: T) => boolean): boolean {
+        if (left === right) return true;
+        if (!left || !right) return false;
+        const someInLeftHasNoMatch = someInMap(left, (leftValue, leftKey) => {
+            if (!right.has(leftKey)) return true;
+            const rightValue = right.get(leftKey);
+            return !(valuesAreEqual ? valuesAreEqual(leftValue, rightValue) : leftValue === rightValue);
+        });
+        if (someInLeftHasNoMatch) return false;
+        const someInRightHasNoMatch = someKeyInMap(right, rightKey => !left.has(rightKey));
+        return !someInRightHasNoMatch;
     }
 
     /**

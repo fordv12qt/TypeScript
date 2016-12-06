@@ -363,8 +363,6 @@ namespace ts {
         return computeLineAndCharacterOfPosition(getLineStarts(sourceFile), position);
     }
 
-    const hasOwnProperty = Object.prototype.hasOwnProperty;
-
     export function isWhiteSpace(ch: number): boolean {
         return isWhiteSpaceSingleLine(ch) || isLineBreak(ch);
     }
@@ -1183,8 +1181,11 @@ namespace ts {
             const len = tokenValue.length;
             if (len >= 2 && len <= 11) {
                 const ch = tokenValue.charCodeAt(0);
-                if (ch >= CharacterCodes.a && ch <= CharacterCodes.z && hasOwnProperty.call(textToToken, tokenValue)) {
-                    return token = textToToken.get(tokenValue);
+                if (ch >= CharacterCodes.a && ch <= CharacterCodes.z) {
+                    token = textToToken.get(tokenValue);
+                    if (token !== undefined) {
+                        return token;
+                    }
                 }
             }
             return token = SyntaxKind.Identifier;

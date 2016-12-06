@@ -67,11 +67,11 @@ namespace ts {
     const gutterSeparator = " ";
     const resetEscapeSequence = "\u001b[0m";
     const ellipsis = "...";
-    const categoryFormatMap = createMap<string>({
-        [DiagnosticCategory.Warning]: yellowForegroundEscapeSequence,
-        [DiagnosticCategory.Error]: redForegroundEscapeSequence,
-        [DiagnosticCategory.Message]: blueForegroundEscapeSequence,
-    });
+    const categoryFormatMap = createMapFromPairs<string>(
+        [DiagnosticCategory.Warning, yellowForegroundEscapeSequence],
+        [DiagnosticCategory.Error, redForegroundEscapeSequence],
+        [DiagnosticCategory.Message, blueForegroundEscapeSequence],
+    );
 
     function formatAndReset(text: string, formatStyle: string) {
         return formatStyle + text + resetEscapeSequence;
@@ -139,7 +139,7 @@ namespace ts {
             output += `${ relativeFileName }(${ firstLine + 1 },${ firstLineChar + 1 }): `;
         }
 
-        const categoryColor = categoryFormatMap[diagnostic.category];
+        const categoryColor = categoryFormatMap.get(diagnostic.category);
         const category = DiagnosticCategory[diagnostic.category].toLowerCase();
         output += `${ formatAndReset(category, categoryColor) } TS${ diagnostic.code }: ${ flattenDiagnosticMessageText(diagnostic.messageText, sys.newLine) }`;
         output += sys.newLine + sys.newLine;

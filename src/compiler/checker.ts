@@ -499,7 +499,7 @@ namespace ts {
                 }
                 else {
                     if (!(targetSymbol.flags & SymbolFlags.Merged)) {
-                        target.set(id, targetSymbol = cloneSymbol(targetSymbol));
+                        target.set(id, targetSymbol = cloneSymbol(targetSymbol)); //break into 2 lines?
                     }
                     mergeSymbol(targetSymbol, sourceSymbol);
                 }
@@ -545,10 +545,10 @@ namespace ts {
 
         function addToSymbolTable(target: SymbolTable, source: SymbolTable, message: DiagnosticMessage) {
             source.forEach((sourceSymbol, id) => {
-                const symbol = target.get(id);
-                if (symbol) {
+                const targetSymbol = target.get(id);
+                if (targetSymbol) {
                     // Error on redeclarations
-                    forEach(symbol.declarations, addDeclarationDiagnostic(id, message));
+                    forEach(targetSymbol.declarations, addDeclarationDiagnostic(id, message));
                 }
                 else {
                     target.set(id, sourceSymbol);
@@ -1124,7 +1124,7 @@ namespace ts {
                     const exportValue = moduleSymbol.exports.get("export=");
                     exportDefaultSymbol = exportValue
                         ? getPropertyOfType(getTypeOfSymbol(exportValue), "default")
-                        : resolveSymbol(exportValue);
+                        : resolveSymbol(moduleSymbol.exports.get("default"));
                 }
 
                 if (!exportDefaultSymbol && !allowSyntheticDefaultImports) {
@@ -16692,7 +16692,7 @@ namespace ts {
 
         function checkUnusedLocalsAndParameters(node: Node): void {
             if (node.parent.kind !== SyntaxKind.InterfaceDeclaration && noUnusedIdentifiers && !isInAmbientContext(node)) {
-                node.locals.forEach((local) => {
+                node.locals.forEach(local => {
                     if (!local.isReferenced) {
                         if (local.valueDeclaration && getRootDeclaration(local.valueDeclaration).kind === SyntaxKind.Parameter) {
                             const parameter = <ParameterDeclaration>getRootDeclaration(local.valueDeclaration);

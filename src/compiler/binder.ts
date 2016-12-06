@@ -2260,8 +2260,7 @@ namespace ts {
                 if (node.name) {
                     node.name.parent = node;
                 }
-                file.bindDiagnostics.push(createDiagnosticForNode(symbolExport.declarations[0],
-                    Diagnostics.Duplicate_identifier_0, prototypeSymbol.name));
+                file.bindDiagnostics.push(createDiagnosticForNode(symbolExport.declarations[0], Diagnostics.Duplicate_identifier_0, prototypeSymbol.name));
             }
             symbol.exports.set(prototypeSymbol.name, prototypeSymbol);
             prototypeSymbol.parent = symbol;

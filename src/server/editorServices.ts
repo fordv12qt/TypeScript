@@ -1302,7 +1302,7 @@ namespace ts.server {
 
         closeExternalProject(uncheckedFileName: string, suppressRefresh = false): void {
             const fileName = toNormalizedPath(uncheckedFileName);
-            const configFiles = this.externalProjectToConfiguredProjectMap[fileName];
+            const configFiles = this.externalProjectToConfiguredProjectMap.get(fileName);
             if (configFiles) {
                 let shouldRefreshInferredProjects = false;
                 for (const configFile of configFiles) {
@@ -1310,7 +1310,7 @@ namespace ts.server {
                         shouldRefreshInferredProjects = true;
                     }
                 }
-                delete this.externalProjectToConfiguredProjectMap[fileName];
+                this.externalProjectToConfiguredProjectMap.delete(fileName);
                 if (shouldRefreshInferredProjects && !suppressRefresh) {
                     this.refreshInferredProjects();
                 }
@@ -1365,7 +1365,7 @@ namespace ts.server {
                 // close existing project and later we'll open a set of configured projects for these files
                 this.closeExternalProject(proj.projectFileName, /*suppressRefresh*/ true);
             }
-            else if (this.externalProjectToConfiguredProjectMap[proj.projectFileName]) {
+            else if (this.externalProjectToConfiguredProjectMap.get(proj.projectFileName)) {
                 // this project used to include config files
                 if (!tsConfigFiles) {
                     // config files were removed from the project - close existing external project which in turn will close configured projects
@@ -1373,7 +1373,7 @@ namespace ts.server {
                 }
                 else {
                     // project previously had some config files - compare them with new set of files and close all configured projects that correspond to unused files
-                    const oldConfigFiles = this.externalProjectToConfiguredProjectMap[proj.projectFileName];
+                    const oldConfigFiles = this.externalProjectToConfiguredProjectMap.get(proj.projectFileName);
                     let iNew = 0;
                     let iOld = 0;
                     while (iNew < tsConfigFiles.length && iOld < oldConfigFiles.length) {
@@ -1401,7 +1401,7 @@ namespace ts.server {
             }
             if (tsConfigFiles) {
                 // store the list of tsconfig files that belong to the external project
-                this.externalProjectToConfiguredProjectMap[proj.projectFileName] = tsConfigFiles;
+                this.externalProjectToConfiguredProjectMap.set(proj.projectFileName, tsConfigFiles);
                 for (const tsconfigFile of tsConfigFiles) {
                     let project = this.findConfiguredProjectByProjectName(tsconfigFile);
                     if (!project) {
@@ -1417,7 +1417,7 @@ namespace ts.server {
             }
             else {
                 // no config files - remove the item from the collection
-                delete this.externalProjectToConfiguredProjectMap[proj.projectFileName];
+                this.externalProjectToConfiguredProjectMap.delete(proj.projectFileName);
                 this.createAndAddExternalProject(proj.projectFileName, rootFiles, proj.options, proj.typeAcquisition);
             }
             this.refreshInferredProjects();

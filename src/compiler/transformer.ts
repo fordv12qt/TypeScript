@@ -13,14 +13,14 @@
 
 /* @internal */
 namespace ts {
-    const moduleTransformerMap = createMap<Transformer>({
-        [ModuleKind.ES2015]: transformES2015Module,
-        [ModuleKind.System]: transformSystemModule,
-        [ModuleKind.AMD]: transformModule,
-        [ModuleKind.CommonJS]: transformModule,
-        [ModuleKind.UMD]: transformModule,
-        [ModuleKind.None]: transformModule,
-    });
+    const moduleTransformerMap = createMapFromPairs<Transformer>(
+        [ModuleKind.ES2015, transformES2015Module],
+        [ModuleKind.System, transformSystemModule],
+        [ModuleKind.AMD, transformModule],
+        [ModuleKind.CommonJS, transformModule],
+        [ModuleKind.UMD, transformModule],
+        [ModuleKind.None, transformModule],
+    );
 
     const enum SyntaxKindFeatureFlags {
         Substitution = 1 << 0,

@@ -10,12 +10,12 @@ namespace ts {
             importAliasNames: ParameterDeclaration[];
         }
 
-        const transformModuleDelegates = createMap<(node: SourceFile) => SourceFile>({
-            [ModuleKind.None]: transformCommonJSModule,
-            [ModuleKind.CommonJS]: transformCommonJSModule,
-            [ModuleKind.AMD]: transformAMDModule,
-            [ModuleKind.UMD]: transformUMDModule,
-        });
+        const transformModuleDelegates = createMapFromPairs<(node: SourceFile) => SourceFile>(
+            [ModuleKind.None, transformCommonJSModule],
+            [ModuleKind.CommonJS, transformCommonJSModule],
+            [ModuleKind.AMD, transformAMDModule],
+            [ModuleKind.UMD, transformUMDModule],
+        );
 
         const {
             startLexicalEnvironment,
