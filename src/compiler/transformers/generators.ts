@@ -217,13 +217,13 @@ namespace ts {
         Endfinally = 7,
     }
 
-    const instructionNames = createMap<string>({
-        [Instruction.Return]: "return",
-        [Instruction.Break]: "break",
-        [Instruction.Yield]: "yield",
-        [Instruction.YieldStar]: "yield*",
-        [Instruction.Endfinally]: "endfinally",
-    });
+    const instructionNames = createMapFromPairs<string>(
+        [Instruction.Return, "return"],
+        [Instruction.Break, "break"],
+        [Instruction.Yield, "yield"],
+        [Instruction.YieldStar, "yield*"],
+        [Instruction.Endfinally, "endfinally"],
+    );
 
     export function transformGenerators(context: TransformationContext) {
         const {
